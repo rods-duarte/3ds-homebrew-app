@@ -6,6 +6,11 @@
 #define SCREEN_WIDTH 400
 #define SCREEN_HEIGHT 240
 
+typedef struct {
+	float x, y; // position
+	float dx, dy; // velocity
+} Player;
+
 int main(int argc, char* argv[])
 {
 	// Init libs
@@ -19,6 +24,12 @@ int main(int argc, char* argv[])
 
 	u32 squareCornerColor = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
 	u32 clearColor = C2D_Color32(0x33, 0x33, 0x33, 0x68);
+	Player player = {
+		.x = 0,
+		.y = 0,
+		.dx = 0,
+		.dy = 0
+	};
 
 	// Main loop
 	while (aptMainLoop())
@@ -26,16 +37,33 @@ int main(int argc, char* argv[])
 		hidScanInput();
 
 		u32 kDown = hidKeysDown();
+		// u32 kHeld = hidKeysHeld();
+		// u32 kUp = hidKeysUp();
+		
 		if (kDown & KEY_START)
 			break; 
-		printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
-		printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
-		printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
+		
+		if (kDown == KEY_DLEFT) {
+			player.x -= 10;
+		}
+
+		if (kDown == KEY_DRIGHT) {
+			player.x += 10;
+		}
+
+		if (kDown == KEY_DUP) {
+			player.y -= 10;
+		}
+
+		if (kDown == KEY_DDOWN) {
+			player.y += 10;
+		}
+
 
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(topScreen, clearColor);
 		C2D_SceneBegin(topScreen);
-		C2D_DrawRectangle(SCREEN_WIDTH - 50, 0, 0, 50, 50, squareCornerColor, squareCornerColor, squareCornerColor, squareCornerColor);
+		C2D_DrawRectangle(player.x, player.y, 0, 50, 50, squareCornerColor, squareCornerColor, squareCornerColor, squareCornerColor);
 		C3D_FrameEnd(0);
 	}
 
@@ -45,3 +73,4 @@ int main(int argc, char* argv[])
 	gfxExit();
 	return 0;
 }
+

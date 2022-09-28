@@ -9,6 +9,8 @@
 typedef struct {
 	float x, y; // position
 	float dx, dy; // velocity
+	float maxVelocity;
+	int width, height;
 } Player;
 
 int main(int argc, char* argv[])
@@ -25,10 +27,13 @@ int main(int argc, char* argv[])
 	u32 squareCornerColor = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
 	u32 clearColor = C2D_Color32(0x33, 0x33, 0x33, 0x68);
 	Player player = {
-		.x = 0,
-		.y = 0,
+		.x = 20,
+		.y = SCREEN_HEIGHT - 50,
 		.dx = 0,
-		.dy = 0
+		.dy = 0,
+		.maxVelocity = 2,
+		.width = 50,
+		.height = 50
 	};
 
 	// Main loop
@@ -39,31 +44,72 @@ int main(int argc, char* argv[])
 		u32 kDown = hidKeysDown();
 		// u32 kHeld = hidKeysHeld();
 		// u32 kUp = hidKeysUp();
-		
-		if (kDown & KEY_START)
-			break; 
-		
-		if (kDown == KEY_DLEFT) {
-			player.x -= 10;
+
+		if (kDown == KEY_DUP && player.y == SCREEN_HEIGHT - player.height) {
+			int JUMP_SPEED = -10;
+			player.dy = JUMP_SPEED;
 		}
 
-		if (kDown == KEY_DRIGHT) {
-			player.x += 10;
+		// if (kUp == KEY_DLEFT || kUp == KEY_DRIGHT) {
+		// 	player.dx = 0;
+		// }
+
+		// if (kUp == KEY_DUP || kUp == KEY_DDOWN) {
+		// 	player.dy = 0;
+		// }
+
+		// if (kHeld & KEY_DUP || kDown & KEY_DUP) {
+		// 	if(player.y <= 0) { // prevent the player from escaping the screen
+		// 		player.dy = 0;
+		// 		player.y = 0;
+		// 	} else if(player.dy != -player.maxVelocity) {
+		// 		player.dy -= 0.2;
+		// 	} 
+		// }
+
+		// if (kHeld & KEY_DDOWN || kDown & KEY_DDOWN) {
+		// 	if(player.y >= SCREEN_HEIGHT - player.height) {
+		// 		player.dy = 0;
+		// 		player.y = SCREEN_HEIGHT - player.height;
+		// 	} else if(player.dy != player.maxVelocity) {
+		// 		player.dy += 0.2;
+		// 	}
+		// }
+
+		// if (kHeld & KEY_DLEFT || kDown & KEY_DLEFT) {
+		// 	if(player.x <= 0) { // prevent the player from escaping the screen
+		// 		player.dx = 0;
+		// 		player.x = 0;
+		// 	} else if(player.dx != -player.maxVelocity) {
+		// 		player.dx -= 0.2;
+		// 	} 
+		// }
+
+		// if (kHeld & KEY_DRIGHT || kDown & KEY_DRIGHT) {
+		// 	if(player.x >= SCREEN_WIDTH - player.width) {
+		// 		player.dx = 0;
+		// 		player.x = SCREEN_WIDTH - player.width;
+		// 	} else if(player.dx != player.maxVelocity) {
+		// 		player.dx += 0.2;
+		// 	}
+		// }
+
+		// player.x = player.x + player.dx;
+		player.y = player.y + player.dy;
+
+		if(player.y != SCREEN_HEIGHT - player.height) {
+			player.dy += 0.5;
 		}
 
-		if (kDown == KEY_DUP) {
-			player.y -= 10;
-		}
-
-		if (kDown == KEY_DDOWN) {
-			player.y += 10;
+		if(player.y > SCREEN_HEIGHT - player.height) {
+			player.y = SCREEN_HEIGHT - player.height;
 		}
 
 
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(topScreen, clearColor);
 		C2D_SceneBegin(topScreen);
-		C2D_DrawRectangle(player.x, player.y, 0, 50, 50, squareCornerColor, squareCornerColor, squareCornerColor, squareCornerColor);
+		C2D_DrawRectangle(player.x, player.y, 0, player.width, player.height, squareCornerColor, squareCornerColor, squareCornerColor, squareCornerColor);
 		C3D_FrameEnd(0);
 	}
 

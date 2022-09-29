@@ -9,9 +9,15 @@
 typedef struct {
 	float x, y; // position
 	float dx, dy; // velocity
-	float maxVelocity;
 	int width, height;
+	u32 color;
 } Player;
+
+typedef struct {
+	float x, y; // position
+	float dx, dy; // velocity
+	int width, height;
+} Obstacle;
 
 int main(int argc, char* argv[])
 {
@@ -24,16 +30,34 @@ int main(int argc, char* argv[])
 
 	C3D_RenderTarget* topScreen = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
-	u32 squareCornerColor = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
+	u32 obstacleCornerColor = C2D_Color32(0x00, 0x00, 0xFF, 0xFF);
 	u32 clearColor = C2D_Color32(0x33, 0x33, 0x33, 0x68);
 	Player player = {
 		.x = 20,
 		.y = SCREEN_HEIGHT - 50,
 		.dx = 0,
 		.dy = 0,
-		.maxVelocity = 2,
 		.width = 50,
-		.height = 50
+		.height = 50,
+		.color = C2D_Color32(0x00, 0xFF, 0x00, 0xFF)
+	};
+
+	// colisao com obstacle
+	// cima -> y + height
+	// baixo
+	// esquerda
+	// direita
+
+	// entre x e x + width
+	// entre y e y + height
+
+	Obstacle obstacle = {
+		.x = SCREEN_WIDTH,
+		.y = SCREEN_HEIGHT - 30,
+		.dx = -2,
+		.dy = 0,
+		.width = 30,
+		.height = 30
 	};
 
 	// Main loop
@@ -96,7 +120,8 @@ int main(int argc, char* argv[])
 
 		// player.x = player.x + player.dx;
 		player.y = player.y + player.dy;
-
+		obstacle.x = obstacle.x + obstacle.dx;
+		
 		if(player.y != SCREEN_HEIGHT - player.height) {
 			player.dy += 0.5;
 		}
@@ -105,11 +130,17 @@ int main(int argc, char* argv[])
 			player.y = SCREEN_HEIGHT - player.height;
 		}
 
+		if(obstacle.x < -obstacle.width) {
+			obstacle.dx -= obstacle.dx*5/100;
+			obstacle.x = SCREEN_WIDTH + 20;
+		}
+
 
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(topScreen, clearColor);
 		C2D_SceneBegin(topScreen);
-		C2D_DrawRectangle(player.x, player.y, 0, player.width, player.height, squareCornerColor, squareCornerColor, squareCornerColor, squareCornerColor);
+		C2D_DrawRectangle(player.x, player.y, 0, player.width, player.height, player.color, player.color, player.color, player.color);
+		C2D_DrawRectangle(obstacle.x, obstacle.y, 0, obstacle.width, obstacle.height, obstacleCornerColor, obstacleCornerColor, obstacleCornerColor, obstacleCornerColor);
 		C3D_FrameEnd(0);
 	}
 

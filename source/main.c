@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
 		}
 
 		if(obstacle.x < -obstacle.width) {
-			obstacle.dx -= obstacle.dx*5/100;
+			obstacle.dx += obstacle.dx*5/100;
 			obstacle.x = SCREEN_WIDTH + 20;
 		}
 

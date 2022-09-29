@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 		.dy = 0,
 		.width = 30,
 		.height = 30,
-		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF);
+		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF)
 	};
 
 	// Main loop
@@ -82,10 +82,13 @@ int main(int argc, char* argv[])
 		bool colision = false;
 		float playerBottom = player.y + player.height;
 		float playerRight = player.x + player.width;
+		float playerLeft = player.x;
 		float obstacleTop = obstacle.y;
 		float obstacleLeft = obstacle.x;
+		float obstacleRight = obstacle.x + obstacle.width;
 
-		if(playerBottom >= obstacleTop && playerRight >= obstacleLeft) {
+		if(playerBottom >= obstacleTop && playerRight >= obstacleLeft && playerLeft <= obstacleRight) {
+			//! ARRUMAR COLISAO, CONTAR SOMENTE SE PLAYERLEFT < OBSTACLERIGHT 
 			colision = true;
 		} 
 		if(colision) {
@@ -99,7 +102,6 @@ int main(int argc, char* argv[])
 			obstacle.dx += obstacle.dx*5/100;
 			obstacle.x = SCREEN_WIDTH + 20;
 		}
-
 
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(topScreen, clearColor);

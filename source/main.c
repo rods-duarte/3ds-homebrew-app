@@ -15,7 +15,7 @@ typedef struct {
 
 typedef struct {
 	float x, y; // position
-	float dx, dy; // velocity
+	float dx, dy, dxMax; // velocity
 	int width, height;
 	u32 color;
 } Obstacle;
@@ -47,12 +47,14 @@ int main(int argc, char* argv[])
 		.y = SCREEN_HEIGHT - 20,
 		.dx = -3,
 		.dy = 0,
+		.dxMax = -20,
 		.width = 20,
 		.height = 20,
 		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF)
 	};
 
 	float score = 0;
+	bool start = false;
 
 	// Main loop
 	while (aptMainLoop())
@@ -69,15 +71,26 @@ int main(int argc, char* argv[])
 			player.dy = JUMP_SPEED;
 		}
 
+		if (kDown == KEY_START && !start) {
+			start = true;
+		}
+
+		if(!start) {
+			printf("\x1b[15;20HThe Game");
+			printf("\x1b[30;15HPress Start to play.");
+			continue;
+		}
+
 		// update position
 		player.y = player.y + player.dy;
 		obstacle.x = obstacle.x + obstacle.dx;
 
 		// update score
 		float scale = 0.25;
-		float walked = (SCREEN_WIDTH - obstacle.x + obstacle.width) * scale;  
+		float walked = (SCREEN_WIDTH - obstacle.x + obstacle.width) * scale;
+		consoleClear();
 		printf("\x1b[2;3HSCORE: %g meters", round((score) * SCREEN_WIDTH * scale + walked));
-		
+
 		// jump
 		if(player.y != SCREEN_HEIGHT - player.height) {
 			player.dy += 0.5;
@@ -106,7 +119,9 @@ int main(int argc, char* argv[])
 
 		// obstacle object reset when off screen
 		if(obstacle.x + obstacle.width < 0) {
-			obstacle.dx += obstacle.dx*1.5/100;
+			if(obstacle.dx < obstacle.dxMax) {
+				obstacle.dx += obstacle.dx*1.5/100;
+			}
 			obstacle.x = SCREEN_WIDTH + 20;
 			score++;
 		}

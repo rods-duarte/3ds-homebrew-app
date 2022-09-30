@@ -102,19 +102,21 @@ int main(int argc, char* argv[])
 			player.y = SCREEN_HEIGHT - player.height;
 		}
 
-		// colission
-		bool colision = false;
+		// collision 
+		bool collision = false;
+		float playerTop = player.y;
 		float playerBottom = player.y + player.height;
 		float playerRight = player.x + player.width;
 		float playerLeft = player.x;
 		float obstacleTop = obstacle.y;
+		float obstacleBottom = obstacle.y + obstacle.height;
 		float obstacleLeft = obstacle.x;
 		float obstacleRight = obstacle.x + obstacle.width;
 
-		if(playerBottom >= obstacleTop && playerRight >= obstacleLeft && playerLeft <= obstacleRight) {
-			colision = true;
+		if(playerBottom >= obstacleTop && playerRight >= obstacleLeft && playerLeft <= obstacleRight && obstacleBottom >= playerTop) {
+			collision = true;
 		} 
-		if(colision) {
+		if(collision) {
 			player.color = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
 		} else {
 			player.color = C2D_Color32(0x00, 0xFF, 0x00, 0xFF);

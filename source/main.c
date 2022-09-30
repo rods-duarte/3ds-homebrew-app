@@ -52,6 +52,8 @@ int main(int argc, char* argv[])
 		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF)
 	};
 
+	float score = 0;
+
 	// Main loop
 	while (aptMainLoop())
 	{
@@ -67,8 +69,14 @@ int main(int argc, char* argv[])
 			player.dy = JUMP_SPEED;
 		}
 
+		// update position
 		player.y = player.y + player.dy;
 		obstacle.x = obstacle.x + obstacle.dx;
+
+		// update score
+		float scale = 0.25;
+		float walked = (SCREEN_WIDTH - obstacle.x + obstacle.width) * scale;  
+		printf("\x1b[2;3HSCORE: %g meters", round((score) * SCREEN_WIDTH * scale + walked));
 		
 		// jump
 		if(player.y != SCREEN_HEIGHT - player.height) {
@@ -97,9 +105,10 @@ int main(int argc, char* argv[])
 		}
 
 		// obstacle object reset when off screen
-		if(obstacle.x < -obstacle.width) {
+		if(obstacle.x + obstacle.width < 0) {
 			obstacle.dx += obstacle.dx*1.5/100;
 			obstacle.x = SCREEN_WIDTH + 20;
+			score++;
 		}
 
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);

@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define SCREEN_WIDTH 400
 #define SCREEN_HEIGHT 240
@@ -47,11 +48,13 @@ int main(int argc, char* argv[])
 		.y = SCREEN_HEIGHT - 20,
 		.dx = -3,
 		.dy = 0,
-		.dxMax = -20,
+		.dxMax = -60,
 		.width = 20,
 		.height = 20,
 		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF)
 	};
+
+	srand(time(NULL));
 
 	float score = 0;
 	bool start = false;
@@ -122,6 +125,14 @@ int main(int argc, char* argv[])
 			if(obstacle.dx < obstacle.dxMax) {
 				obstacle.dx += obstacle.dx*1.5/100;
 			}
+			int randNumber = rand() % 100;
+
+			if(randNumber > 50) {
+			obstacle.y = SCREEN_HEIGHT - 70;
+			} else {
+			obstacle.y = SCREEN_HEIGHT - 20;
+			}
+
 			obstacle.x = SCREEN_WIDTH + 20;
 			score++;
 		}

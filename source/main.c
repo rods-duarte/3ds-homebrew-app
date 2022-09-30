@@ -34,21 +34,21 @@ int main(int argc, char* argv[])
 
 	Player player = {
 		.x = 20,
-		.y = SCREEN_HEIGHT - 50,
+		.y = SCREEN_HEIGHT - 40,
 		.dx = 0,
 		.dy = 0,
-		.width = 50,
-		.height = 50,
+		.width = 20,
+		.height = 40,
 		.color = C2D_Color32(0x00, 0xFF, 0x00, 0xFF)
 	};
 
 	Obstacle obstacle = {
 		.x = SCREEN_WIDTH,
-		.y = SCREEN_HEIGHT - 30,
-		.dx = -2,
+		.y = SCREEN_HEIGHT - 20,
+		.dx = -3,
 		.dy = 0,
-		.width = 30,
-		.height = 30,
+		.width = 20,
+		.height = 20,
 		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF)
 	};
 
@@ -88,7 +88,6 @@ int main(int argc, char* argv[])
 		float obstacleRight = obstacle.x + obstacle.width;
 
 		if(playerBottom >= obstacleTop && playerRight >= obstacleLeft && playerLeft <= obstacleRight) {
-			//! ARRUMAR COLISAO, CONTAR SOMENTE SE PLAYERLEFT < OBSTACLERIGHT 
 			colision = true;
 		} 
 		if(colision) {
@@ -99,7 +98,7 @@ int main(int argc, char* argv[])
 
 		// obstacle object reset when off screen
 		if(obstacle.x < -obstacle.width) {
-			obstacle.dx += obstacle.dx*5/100;
+			obstacle.dx += obstacle.dx*1.5/100;
 			obstacle.x = SCREEN_WIDTH + 20;
 		}
 

@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
 
 	float score = 0;
 	bool start = false;
+	bool reset = false;
 
 	// Main loop
 	while (aptMainLoop())
@@ -78,9 +79,22 @@ int main(int argc, char* argv[])
 			start = true;
 		}
 
+		if(reset) {
+			player.x = 20;
+			player.y = 20;
+			player.dy = 0;
+			obstacle.x = SCREEN_WIDTH;
+			obstacle.y = SCREEN_HEIGHT - 20;
+			obstacle.dx = -3;
+			score = 0;
+	
+			reset = false;
+			start = false;
+		}
+
 		if(!start) {
 			printf("\x1b[15;20HThe Game");
-			printf("\x1b[30;15HPress Start to play.");
+			printf("\x1b[30;14HPress Start to play.");
 			continue;
 		}
 
@@ -118,6 +132,8 @@ int main(int argc, char* argv[])
 		} 
 		if(collision) {
 			player.color = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
+			obstacle.dx = 0;
+			reset = true;
 		} else {
 			player.color = C2D_Color32(0x00, 0xFF, 0x00, 0xFF);
 		}
@@ -153,4 +169,3 @@ int main(int argc, char* argv[])
 	gfxExit();
 	return 0;
 }
-

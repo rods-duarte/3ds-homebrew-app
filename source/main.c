@@ -132,8 +132,8 @@ int main(int argc, char* argv[])
 		} 
 		if(collision) {
 			player.color = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
-			// obstacle.dx = 0;
-			// reset = true;
+			obstacle.dx = 0;
+			reset = true;
 		} else {
 			player.color = C2D_Color32(0x00, 0xFF, 0x00, 0xFF);
 		}

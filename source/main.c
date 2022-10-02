@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		.y = SCREEN_HEIGHT - 20,
 		.dx = -3,
 		.dy = 0,
-		.dxMax = -60,
+		.dxMax = -11,
 		.width = 20,
 		.height = 20,
 		.color = C2D_Color32(0x00, 0x00, 0xFF, 0xFF)
@@ -132,21 +132,22 @@ int main(int argc, char* argv[])
 		} 
 		if(collision) {
 			player.color = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
-			obstacle.dx = 0;
-			reset = true;
+			// obstacle.dx = 0;
+			// reset = true;
 		} else {
 			player.color = C2D_Color32(0x00, 0xFF, 0x00, 0xFF);
 		}
 
 		// obstacle object reset when off screen
 		if(obstacle.x + obstacle.width < 0) {
-			if(obstacle.dx < obstacle.dxMax) {
+			if(obstacle.dx >= obstacle.dxMax) {
 				obstacle.dx += obstacle.dx*1.5/100;
 			}
 			int randNumber = rand() % 100;
-
-			if(randNumber > 50) {
-			obstacle.y = SCREEN_HEIGHT - 70;
+			
+			// obstacle high or low
+			if(randNumber > 50) { 
+			obstacle.y = SCREEN_HEIGHT - 100;
 			} else {
 			obstacle.y = SCREEN_HEIGHT - 20;
 			}
